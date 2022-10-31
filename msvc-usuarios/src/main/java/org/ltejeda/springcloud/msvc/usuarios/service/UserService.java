@@ -9,7 +9,7 @@ public interface UserService {
 
     List<User> list();
 
-    Optional<User> byId();
+    Optional<User> byId(Long id);
 
     User save(User user);
 
