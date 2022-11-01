@@ -5,9 +5,13 @@ import org.ltejeda.springcloud.msvc.usuarios.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -17,14 +21,14 @@ public class UserController {
     private UserService service;
 
     @GetMapping("/")
-    public List<User> list(){
+    public List<User> list() {
         return service.list();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id){
+    public ResponseEntity<?> detail(@PathVariable Long id) {
         Optional<User> userOpt = service.byId(id);
-        if(userOpt.isPresent()){
+        if (userOpt.isPresent()) {
             return ResponseEntity.ok(userOpt.get());
         }
         return ResponseEntity.notFound().build();
@@ -32,14 +36,22 @@ public class UserController {
 
     @PostMapping
 //    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@RequestBody User user){
+    public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return validate(result);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@RequestBody User user, @PathVariable Long id){
+    public ResponseEntity<?> edit(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id) {
+
+        if (result.hasErrors()) {
+            return validate(result);
+        }
+
         Optional<User> o = service.byId(id);
-        if(o.isPresent()){
+        if (o.isPresent()) {
             User userDb = o.get();
             userDb.setName(user.getName());
             userDb.setEmail(user.getEmail());
@@ -50,12 +62,20 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id){
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         Optional<User> o = service.byId(id);
-        if(o.isPresent()){
+        if (o.isPresent()) {
             service.delete(id);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private ResponseEntity<?> validate(BindingResult result) {
+        Map<String, String> errors = new HashMap<>();
+        result.getFieldErrors().forEach(e -> {
+            errors.put(e.getField(), "The field " + e.getField() + " " + e.getDefaultMessage());
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }

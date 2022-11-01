@@ -1,6 +1,9 @@
 package org.ltejeda.springcloud.msvc.usuarios.models.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "users")
@@ -10,11 +13,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String name;
 
     @Column(unique = true)
+    @Email
+    @NotEmpty
     private String email;
 
+    @NotBlank
     private String password;
 
     public Long getId() {
