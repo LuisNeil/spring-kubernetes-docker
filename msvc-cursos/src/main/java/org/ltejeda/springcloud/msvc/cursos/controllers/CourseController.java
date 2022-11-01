@@ -1,6 +1,6 @@
 package org.ltejeda.springcloud.msvc.cursos.controllers;
 
-import org.ltejeda.springcloud.msvc.cursos.entity.Course;
+import org.ltejeda.springcloud.msvc.cursos.models.entity.Course;
 import org.ltejeda.springcloud.msvc.cursos.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

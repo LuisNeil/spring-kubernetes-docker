@@ -1,7 +1,7 @@
 package org.ltejeda.springcloud.msvc.cursos.services;
 
 
-import org.ltejeda.springcloud.msvc.cursos.entity.Course;
+import org.ltejeda.springcloud.msvc.cursos.models.entity.Course;
 
 import java.util.List;
 import java.util.Optional;
