@@ -9,10 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -37,8 +34,15 @@ public class UserController {
     @PostMapping
 //    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result) {
+
         if (result.hasErrors()) {
             return validate(result);
+        }
+
+        if(!user.getEmail().isEmpty() && service.byEmail(user.getEmail()).isPresent()){
+            return ResponseEntity.badRequest()
+                    .body(Collections
+                            .singletonMap("mensaje","The user with this email exists"));
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(user));
     }
@@ -53,6 +57,13 @@ public class UserController {
         Optional<User> o = service.byId(id);
         if (o.isPresent()) {
             User userDb = o.get();
+            if(!user.getEmail().isEmpty() &&
+                    !user.getEmail().equalsIgnoreCase(userDb.getEmail()) &&
+                    service.byEmail(user.getEmail()).isPresent()){
+                return ResponseEntity.badRequest()
+                        .body(Collections
+                                .singletonMap("message","The user with this email exists"));
+            }
             userDb.setName(user.getName());
             userDb.setEmail(user.getEmail());
             userDb.setPassword(user.getPassword());
