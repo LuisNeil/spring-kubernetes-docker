@@ -1,5 +1,7 @@
 package org.ltejeda.springcloud.msvc.cursos.services;
 
+import org.ltejeda.springcloud.msvc.cursos.clients.UserClientRest;
+import org.ltejeda.springcloud.msvc.cursos.models.User;
 import org.ltejeda.springcloud.msvc.cursos.models.entity.Course;
 import org.ltejeda.springcloud.msvc.cursos.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,10 @@ public class CourseServiceImpl implements CourseService{
 
     @Autowired
     private CourseRepository repository;
+
+    @Autowired
+    
+    private UserClientRest clientRest;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,5 +43,20 @@ public class CourseServiceImpl implements CourseService{
     @Transactional
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> assignUser(User user, Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> createUser(User user, Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> deleteUser(User user, Long courseId) {
+        return Optional.empty();
     }
 }

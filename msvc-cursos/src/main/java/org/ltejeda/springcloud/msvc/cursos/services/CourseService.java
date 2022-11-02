@@ -1,6 +1,7 @@
 package org.ltejeda.springcloud.msvc.cursos.services;
 
 
+import org.ltejeda.springcloud.msvc.cursos.models.User;
 import org.ltejeda.springcloud.msvc.cursos.models.entity.Course;
 
 import java.util.List;
@@ -14,4 +15,11 @@ public interface CourseService {
     Course save(Course course);
 
     void delete(Long id);
+
+    Optional<User> assignUser(User user, Long courseId);
+
+    Optional<User> createUser(User user, Long courseId);
+
+    Optional<User> deleteUser(User user, Long courseId);
+
 }
