@@ -70,9 +70,9 @@ public class CourseController {
 
     @PutMapping("/assign-user/{courseId}")
     public ResponseEntity<?> assignUser(@RequestBody User user, @PathVariable Long courseId) {
-        Optional<User> o = Optional.empty();
+        Optional<User> o;
         try {
-            service.assignUser(user, courseId);
+            o = service.assignUser(user, courseId);
         } catch (FeignException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("message", "The user does not exist  by " +
@@ -87,9 +87,9 @@ public class CourseController {
 
     @PostMapping("/create-user/{courseId}")
     public ResponseEntity<?> createUser(@RequestBody User user, @PathVariable Long courseId) {
-        Optional<User> o = Optional.empty();
+        Optional<User> o;
         try {
-            service.createUser(user, courseId);
+            o = service.createUser(user, courseId);
         } catch (FeignException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("message", "The user could not be created " +
@@ -104,9 +104,9 @@ public class CourseController {
 
     @DeleteMapping("/delete-user/{courseId}")
     public ResponseEntity<?> deleteUser(@RequestBody User user, @PathVariable Long courseId) {
-        Optional<User> o = Optional.empty();
+        Optional<User> o;
         try {
-            service.deleteUser(user, courseId);
+            o = service.deleteUser(user, courseId);
         } catch (FeignException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Collections.singletonMap("message", "The user does not exist  by " +
