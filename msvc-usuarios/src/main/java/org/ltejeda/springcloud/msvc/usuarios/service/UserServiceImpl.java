@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<User> listByIds(Iterable<Long> ids) {
+        return (List<User>) repository.findAllById(ids);
+    }
+
+    @Override
     public Optional<User> byEmail(String email) {
         return repository.byEmail(email);
     }
