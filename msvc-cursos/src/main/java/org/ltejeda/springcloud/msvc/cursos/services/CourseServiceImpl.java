@@ -3,6 +3,7 @@ package org.ltejeda.springcloud.msvc.cursos.services;
 import org.ltejeda.springcloud.msvc.cursos.clients.UserClientRest;
 import org.ltejeda.springcloud.msvc.cursos.models.User;
 import org.ltejeda.springcloud.msvc.cursos.models.entity.Course;
+import org.ltejeda.springcloud.msvc.cursos.models.entity.CourseUser;
 import org.ltejeda.springcloud.msvc.cursos.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class CourseServiceImpl implements CourseService{
     private CourseRepository repository;
 
     @Autowired
-    
+
     private UserClientRest clientRest;
 
     @Override
@@ -46,17 +47,61 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public Optional<User> assignUser(User user, Long id) {
+    @Transactional
+    public Optional<User> assignUser(User user, Long courseId) {
+        Optional<Course> o = repository.findById(courseId);
+        if(o.isPresent()){
+
+            User userMsvc = clientRest.detail(user.getId());
+
+            Course course = o.get();
+            CourseUser courseUser = new CourseUser();
+            courseUser.setUserId(userMsvc.getId());
+
+            course.addCourseUser(courseUser);
+            repository.save(course);
+            return Optional.of(userMsvc);
+        }
         return Optional.empty();
     }
 
     @Override
-    public Optional<User> createUser(User user, Long id) {
+    @Transactional
+    public Optional<User> createUser(User user, Long courseId) {
+
+        Optional<Course> o = repository.findById(courseId);
+        if(o.isPresent()){
+
+            User newUserMsvc = clientRest.create(user);
+
+            Course course = o.get();
+            CourseUser courseUser = new CourseUser();
+            courseUser.setUserId(newUserMsvc.getId());
+
+            course.addCourseUser(courseUser);
+            repository.save(course);
+            return Optional.of(newUserMsvc);
+        }
+
         return Optional.empty();
     }
 
     @Override
+    @Transactional
     public Optional<User> deleteUser(User user, Long courseId) {
+        Optional<Course> o = repository.findById(courseId);
+        if(o.isPresent()){
+
+            User userMsvc = clientRest.detail(user.getId());
+
+            Course course = o.get();
+            CourseUser courseUser = new CourseUser();
+            courseUser.setUserId(userMsvc.getId());
+
+            course.removeCourseUser(courseUser);
+            repository.save(course);
+            return Optional.of(userMsvc);
+        }
         return Optional.empty();
     }
 }
