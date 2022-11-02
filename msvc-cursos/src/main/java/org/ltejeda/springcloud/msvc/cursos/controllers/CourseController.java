@@ -26,7 +26,7 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detail(@PathVariable Long id) {
-        Optional<Course> o = service.byId(id);
+        Optional<Course> o =service.byIdWithUsers(id); //service.byId(id);
         if (o.isPresent()) {
             return ResponseEntity.ok(o.get());
         }
